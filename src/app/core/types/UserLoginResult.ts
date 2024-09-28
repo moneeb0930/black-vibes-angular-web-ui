@@ -1,0 +1,1 @@
+export type UserLoginResult = { username: string, isSignedIn: boolean, nextStep: string };

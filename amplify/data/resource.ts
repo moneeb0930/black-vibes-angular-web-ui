@@ -5,8 +5,83 @@ The section below creates a Todo database table with a "content" field. Try
 adding a new "isDone" field as a boolean. The authorization rule below
 specifies that any user authenticated via an API key can "create", "read",
 "update", and "delete" any "Todo" records.
+
 =========================================================================*/
-const schema = a.schema({
+const schema = a.schema({ 
+
+  UserProfile: a.model({   
+    birth_date: a.date(),
+    username: a.string().required(),
+    locale: a.json().required(),
+    bio: a.string(),
+    interests: a.string(),
+    gender: a.ref("Gender"),
+    lastname: a.string(),
+    firstname: a.string(),
+    owner: a.string().authorization(allow => [allow.owner().to(['read', 'delete'])]),
+    app_theme: a.ref("AppTheme"),
+    profile_theme: a.ref("ProfileTheme")
+  })
+  .authorization((allow) => [
+    allow.publicApiKey().to(["read"]), 
+    allow.owner()
+  ]),
+
+  Newsletter: a.model({   
+    email_address: a.email(),
+  })
+  .authorization((allow) => [
+    allow.publicApiKey(), 
+    allow.groups(["Guest", "Member"])
+  ]),
+  
+  SpaceTypeEnum: a.enum([
+    'HOME',
+    'BUSINESS',
+    'GROUP'
+  ]),
+
+  PrivacyLevelEnum: a.enum([
+    'PRIVATE',
+    'FRIENDS_ONLY',
+    'PUBLIC',
+    'INVITE_ONLY'
+  ]),
+
+  FriendshipStatusEnum: a.enum([
+    'FRIENDS',
+    'NOT_FRIENDS',
+    'BLOCKED',
+  ]),
+
+  RequestStatusEnum: a.enum([
+    'NEW',
+    'ACCEPTED',
+    'CANCELED',
+    'DENIED',
+  ]),
+
+  PollTypeEnum: a.enum([
+    'TRUE_FALSE',
+    'AGREE_DISAGREE',
+    'OPEN_TEXT',
+    'MULTIPLE_CHOICE',
+  ]),
+
+  Gender: a.enum([
+    'SHE/HER',    
+  ]),
+
+  AppTheme: a.enum([
+    'LIGHT',
+    'DARK',
+  ]),
+
+  ProfileTheme: a.enum([
+    'SYSTEM',
+    'TANGERINE',
+  ]),
+ 
   Todo: a
     .model({
       content: a.string(),

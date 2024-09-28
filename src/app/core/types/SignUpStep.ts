@@ -1,0 +1,1 @@
+export type SignUpStep = "DONE" | "CONFIRM_SIGN_UP" | "COMPLETE_AUTO_SIGN_IN";
